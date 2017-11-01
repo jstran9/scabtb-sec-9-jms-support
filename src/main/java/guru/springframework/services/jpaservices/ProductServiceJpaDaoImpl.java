@@ -12,7 +12,7 @@ import java.util.List;
  * Created by jt on 12/9/15.
  */
 @Service
-@Profile("jpadao-dontuse") // this service will no longer be used.
+@Profile("jpadao") // move this back to test if this profile is still used but it will not because of the changes in application.properties.
 public class ProductServiceJpaDaoImpl extends AbstractJpaDaoService implements ProductService {
 
     @Override
