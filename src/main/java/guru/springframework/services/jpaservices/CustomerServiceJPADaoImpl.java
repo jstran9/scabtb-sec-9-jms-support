@@ -27,30 +27,47 @@ public class CustomerServiceJPADaoImpl extends AbstractJpaDaoService implements 
     @Override
     public List<Customer> listAll() {
         EntityManager em = emf.createEntityManager();
-
-        return em.createQuery("from Customer", Customer.class).getResultList();
+        try {
+            return em.createQuery("from Customer", Customer.class).getResultList();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 
     @Override
     public Customer getById(Integer id) {
         EntityManager em = emf.createEntityManager();
-
-        return em.find(Customer.class, id);
+        try {
+            return em.find(Customer.class, id);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 
     @Override
     public Customer saveOrUpdate(Customer domainObject) {
         EntityManager em = emf.createEntityManager();
 
-        em.getTransaction().begin();
+        Customer savedCustomer;
+        try {
+            em.getTransaction().begin();
 
-        if (domainObject.getUser() != null && domainObject.getUser().getPassword() != null) {
-            domainObject.getUser().setEncryptedPassword(
-                    encryptionService.encryptString(domainObject.getUser().getPassword()));
+            if (domainObject.getUser() != null && domainObject.getUser().getPassword() != null) {
+                domainObject.getUser().setEncryptedPassword(
+                        encryptionService.encryptString(domainObject.getUser().getPassword()));
+            }
+
+            savedCustomer = em.merge(domainObject);
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
-
-        Customer savedCustomer = em.merge(domainObject);
-        em.getTransaction().commit();
 
         return savedCustomer;
     }
@@ -59,8 +76,14 @@ public class CustomerServiceJPADaoImpl extends AbstractJpaDaoService implements 
     public void delete(Integer id) {
         EntityManager em = emf.createEntityManager();
 
-        em.getTransaction().begin();
-        em.remove(em.find(Customer.class, id));
-        em.getTransaction().commit();
+        try {
+            em.getTransaction().begin();
+            em.remove(em.find(Customer.class, id));
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 }

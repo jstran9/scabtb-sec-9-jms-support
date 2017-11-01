@@ -19,23 +19,42 @@ public class OrderServiceJpaDaoImpl extends AbstractJpaDaoService implements Ord
     public List<Order> listAll() {
         EntityManager em = emf.createEntityManager();
 
-        return em.createQuery("from Order", Order.class).getResultList();
+        try {
+            return em.createQuery("from Order", Order.class).getResultList();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 
     @Override
     public Order getById(Integer id) {
         EntityManager em = emf.createEntityManager();
 
-        return em.find(Order.class, id);
+        try {
+            return em.find(Order.class, id);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 
     @Override
     public Order saveOrUpdate(Order domainObject) {
         EntityManager em = emf.createEntityManager();
 
-        em.getTransaction().begin();
-        Order savedProduct = em.merge(domainObject);
-        em.getTransaction().commit();
+        Order savedProduct;
+        try {
+            em.getTransaction().begin();
+            savedProduct = em.merge(domainObject);
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
 
         return savedProduct;
     }
@@ -44,8 +63,14 @@ public class OrderServiceJpaDaoImpl extends AbstractJpaDaoService implements Ord
     public void delete(Integer id) {
         EntityManager em = emf.createEntityManager();
 
-        em.getTransaction().begin();
-        em.remove(em.find(Order.class, id));
-        em.getTransaction().commit();
+        try {
+            em.getTransaction().begin();
+            em.remove(em.find(Order.class, id));
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 }

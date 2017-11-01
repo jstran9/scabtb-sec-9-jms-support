@@ -19,23 +19,42 @@ public class ProductServiceJpaDaoImpl extends AbstractJpaDaoService implements P
     public List<Product> listAll() {
         EntityManager em = emf.createEntityManager();
 
-        return em.createQuery("from Product", Product.class).getResultList();
+        try {
+            return em.createQuery("from Product", Product.class).getResultList();
+        } finally {
+            if(em != null) {
+                em.close();
+            }
+        }
     }
 
     @Override
     public Product getById(Integer id) {
         EntityManager em = emf.createEntityManager();
 
-        return em.find(Product.class, id);
+        try {
+            return em.find(Product.class, id);
+        } finally {
+            if(em != null) {
+                em.close();
+            }
+        }
     }
 
     @Override
     public Product saveOrUpdate(Product domainObject) {
         EntityManager em = emf.createEntityManager();
 
-        em.getTransaction().begin();
-        Product savedProduct = em.merge(domainObject);
-        em.getTransaction().commit();
+        Product savedProduct;
+        try {
+            em.getTransaction().begin();
+            savedProduct = em.merge(domainObject);
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
 
         return savedProduct;
     }
@@ -44,8 +63,14 @@ public class ProductServiceJpaDaoImpl extends AbstractJpaDaoService implements P
     public void delete(Integer id) {
         EntityManager em = emf.createEntityManager();
 
-        em.getTransaction().begin();
-        em.remove(em.find(Product.class, id));
-        em.getTransaction().commit();
+        try {
+            em.getTransaction().begin();
+            em.remove(em.find(Product.class, id));
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 }

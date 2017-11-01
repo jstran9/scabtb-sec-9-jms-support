@@ -19,23 +19,42 @@ public class RoleServiceJpaImpl extends AbstractJpaDaoService implements RoleSer
     public List<?> listAll() {
         EntityManager em = emf.createEntityManager();
 
-        return em.createQuery("from Role", Role.class).getResultList();
+        try {
+            return em.createQuery("from Role", Role.class).getResultList();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 
     @Override
     public Role getById(Integer id) {
         EntityManager em = emf.createEntityManager();
-        return em.find(Role.class, id);
+        try {
+            return em.find(Role.class, id);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 
     @Override
     public Role saveOrUpdate(Role domainObject) {
         EntityManager em = emf.createEntityManager();
 
-        em.getTransaction().begin();
+        Role saveRole;
+        try {
+            em.getTransaction().begin();
 
-        Role saveRole = em.merge(domainObject);
-        em.getTransaction().commit();
+            saveRole = em.merge(domainObject);
+            em.getTransaction().commit();
+        } finally {
+            if(em != null) {
+                em.close();
+            }
+        }
 
         return saveRole;
     }
@@ -44,8 +63,14 @@ public class RoleServiceJpaImpl extends AbstractJpaDaoService implements RoleSer
     public void delete(Integer id) {
         EntityManager em = emf.createEntityManager();
 
-        em.getTransaction().begin();
-        em.remove(em.find(Role.class, id));
-        em.getTransaction().commit();
+        try {
+            em.getTransaction().begin();
+            em.remove(em.find(Role.class, id));
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 }

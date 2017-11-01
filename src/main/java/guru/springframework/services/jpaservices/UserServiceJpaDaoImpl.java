@@ -28,28 +28,47 @@ public class UserServiceJpaDaoImpl extends AbstractJpaDaoService implements User
     public List<?> listAll() {
         EntityManager em = emf.createEntityManager();
 
-        return em.createQuery("from User", User.class).getResultList();
+        try {
+            return em.createQuery("from User", User.class).getResultList();
+        } finally {
+            if(em != null) {
+                em.close();
+            }
+        }
     }
 
     @Override
     public User getById(Integer id) {
         EntityManager em = emf.createEntityManager();
 
-        return em.find(User.class, id);
+        try {
+            return em.find(User.class, id);
+        } finally {
+            if(em != null) {
+                em.close();
+            }
+        }
     }
 
     @Override
     public User saveOrUpdate(User domainObject) {
         EntityManager em = emf.createEntityManager();
 
-        em.getTransaction().begin();
+        User saveduser;
+        try {
+            em.getTransaction().begin();
 
-        if(domainObject.getPassword() != null){
-            domainObject.setEncryptedPassword(encryptionService.encryptString(domainObject.getPassword()));
+            if(domainObject.getPassword() != null){
+                domainObject.setEncryptedPassword(encryptionService.encryptString(domainObject.getPassword()));
+            }
+
+            saveduser = em.merge(domainObject);
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
         }
-
-        User saveduser = em.merge(domainObject);
-        em.getTransaction().commit();
 
         return saveduser;
     }
@@ -58,8 +77,14 @@ public class UserServiceJpaDaoImpl extends AbstractJpaDaoService implements User
     public void delete(Integer id) {
         EntityManager em = emf.createEntityManager();
 
-        em.getTransaction().begin();
-        em.remove(em.find(User.class, id));
-        em.getTransaction().commit();
+        try {
+            em.getTransaction().begin();
+            em.remove(em.find(User.class, id));
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 }
