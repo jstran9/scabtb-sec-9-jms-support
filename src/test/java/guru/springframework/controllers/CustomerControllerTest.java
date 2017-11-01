@@ -2,6 +2,7 @@ package guru.springframework.controllers;
 
 import guru.springframework.domain.Address;
 import guru.springframework.domain.Customer;
+import guru.springframework.exceptions.NotFoundException;
 import guru.springframework.services.CustomerService;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,6 +67,19 @@ public class CustomerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("customer/show"))
                 .andExpect(model().attribute("customer", instanceOf(Customer.class)));
+    }
+
+    @Test
+    public void testShowInvalidCustomer() throws Exception {
+
+        int invalidId = -1;
+
+        when(customerService.getById(invalidId)).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/customer/show/" + String.valueOf(invalidId)))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("genericError"))
+                .andExpect(model().attribute("exception", instanceOf(Exception.class)));
     }
 
     @Test

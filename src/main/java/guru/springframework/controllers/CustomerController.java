@@ -1,19 +1,23 @@
 package guru.springframework.controllers;
 
 import guru.springframework.domain.Customer;
+import guru.springframework.exceptions.NotFoundException;
 import guru.springframework.services.CustomerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Created by jt on 11/15/15.
  */
 @RequestMapping("/customer")
 @Controller
+@Slf4j
 public class CustomerController {
 
     private CustomerService customerService;
@@ -58,4 +62,15 @@ public class CustomerController {
         customerService.delete(id);
         return "redirect:/customer/list";
     }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler({NotFoundException.class})
+    public ModelAndView handleCustomerNotFound(Exception exception){
+        log.error("Customer could not be found exception! " + exception.getMessage());
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("exception", exception);
+        modelAndView.setViewName("genericError");
+        return modelAndView;
+    }
+
 }

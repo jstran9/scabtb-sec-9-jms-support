@@ -1,6 +1,7 @@
 package guru.springframework.controllers;
 
 import guru.springframework.domain.Product;
+import guru.springframework.exceptions.NotFoundException;
 import guru.springframework.services.ProductService;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,6 +67,19 @@ public class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("product/show"))
                 .andExpect(model().attribute("product", instanceOf(Product.class)));
+    }
+
+    @Test
+    public void testInvalidShow() throws Exception{
+        Integer id = -1;
+
+        //Tell Mockito stub to return new product for ID 1
+        when(productService.getById(id)).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/product/show/" + String.valueOf(id)))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("genericError"))
+                .andExpect(model().attribute("exception", instanceOf(Exception.class)));
     }
 
     @Test
