@@ -13,7 +13,7 @@ public class AbstractDomainClass implements DomainObject {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Integer id;
 
-//    @Version
+    @Version
     private Integer version;
 
     private Date dateCreated;
