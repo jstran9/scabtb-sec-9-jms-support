@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>guru.springframework</groupId>
-    <artifactId>springmvc</artifactId>
+    <artifactId>commandObjectsAndSpringMVC</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>springmvc</name>
-    <description>Demo project for Spring Boot and Spring Data JPA</description>
+    <name>commandObjectsAndSpringMVC</name>
+    <description>Demo project for Spring Boot and Command Objects with Spring MVC</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
