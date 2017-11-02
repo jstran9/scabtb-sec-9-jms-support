@@ -1,5 +1,6 @@
 package guru.springframework.controllers;
 
+import guru.springframework.exceptions.DBFailureException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.StaleObjectStateException;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,24 @@ public class ControllerExceptionHandler {
         ModelAndView modelAndView = new ModelAndView();
 
         modelAndView.setViewName("dbError");
-        modelAndView.addObject("exception", "You tried to modify something at the same time as another user.\nPlease try again in a little bit!");
+        modelAndView.addObject("exception", "You tried to modify something at the same " +
+                "time as another user.\nPlease try again in a little bit!");
+
+        return modelAndView;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DBFailureException.class)
+    public ModelAndView dbDeleteError(Exception exception){
+
+        log.error("DB deletion exception");
+        log.error(exception.getMessage());
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.setViewName("dbError");
+        modelAndView.addObject("exception", "You tried were not able to properly delete " +
+                "you were attempting to.");
 
         return modelAndView;
     }
