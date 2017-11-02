@@ -1,5 +1,7 @@
 package guru.springframework.services.reposervices;
 
+import guru.springframework.commands.ProductForm;
+import guru.springframework.converters.ProductFormToProduct;
 import guru.springframework.domain.Product;
 import guru.springframework.exceptions.NotFoundException;
 import guru.springframework.repositories.ProductRepository;
@@ -20,10 +22,12 @@ import java.util.Optional;
 public class ProductServiceRepoImpl implements ProductService {
 
     private ProductRepository productRepository;
+    private ProductFormToProduct productFormToProduct;
 
     @Autowired
-    public void setProductRepository(ProductRepository productRepository) {
+    public void setProductRepository(ProductRepository productRepository, ProductFormToProduct productFormToProduct) {
         this.productRepository = productRepository;
+        this.productFormToProduct = productFormToProduct;
     }
 
     @Override
@@ -46,6 +50,11 @@ public class ProductServiceRepoImpl implements ProductService {
     @Override
     public Product saveOrUpdate(Product domainObject) {
         return productRepository.save(domainObject);
+    }
+
+    @Override
+    public Product saveOrUpdateProductForm(ProductForm productForm) {
+        return saveOrUpdate(productFormToProduct.convert(productForm));
     }
 
     @Override

@@ -1,8 +1,8 @@
 package guru.springframework.commands;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 /**
  * Created by jt on 12/22/15.
@@ -12,11 +12,17 @@ public class CustomerForm {
     private Integer userVersion;
     private Integer customerId;
     private Integer customerVersion;
+
     @NotEmpty
     @Size(min = 2, max = 75)
     private String userName;
+
+    @NotEmpty
     private String passwordText;
+
+    @NotEmpty
     private String passwordTextConf;
+
     private String firstName;
     private String lastName;
 

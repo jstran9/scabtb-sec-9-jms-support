@@ -1,5 +1,7 @@
 package guru.springframework.services.jpaservices;
 
+import guru.springframework.commands.ProductForm;
+import guru.springframework.converters.ProductFormToProduct;
 import guru.springframework.domain.Product;
 import guru.springframework.services.ProductService;
 import org.springframework.context.annotation.Profile;
@@ -14,6 +16,12 @@ import java.util.List;
 @Service
 @Profile("jpadao") // move this back to test if this profile is still used but it will not because of the changes in application.properties.
 public class ProductServiceJpaDaoImpl extends AbstractJpaDaoService implements ProductService {
+
+    private ProductFormToProduct productFormToProduct;
+
+    public ProductServiceJpaDaoImpl(ProductFormToProduct productFormToProduct) {
+        this.productFormToProduct = productFormToProduct;
+    }
 
     @Override
     public List<Product> listAll() {
@@ -57,6 +65,11 @@ public class ProductServiceJpaDaoImpl extends AbstractJpaDaoService implements P
         }
 
         return savedProduct;
+    }
+
+    @Override
+    public Product saveOrUpdateProductForm(ProductForm productForm) {
+        return saveOrUpdate(productFormToProduct.convert(productForm));
     }
 
     @Override

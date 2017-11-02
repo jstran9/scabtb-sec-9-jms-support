@@ -1,6 +1,8 @@
 package guru.springframework.controllers;
 
 import guru.springframework.commands.CustomerForm;
+import guru.springframework.commands.validators.CustomerFormValidator;
+import guru.springframework.converters.CustomerToCustomerForm;
 import guru.springframework.domain.Address;
 import guru.springframework.domain.Customer;
 import guru.springframework.domain.User;
@@ -43,6 +45,10 @@ public class CustomerControllerTest {
     public void setup(){
         MockitoAnnotations.initMocks(this);
 
+//        customerController.setCustomerFormValidator(new CustomerFormValidator());
+//        customerController.setCustomerToCustomerForm(new CustomerToCustomerForm());
+        customerController = new CustomerController(customerService, new CustomerToCustomerForm(),
+                new CustomerFormValidator());
         mockMvc = MockMvcBuilders.standaloneSetup(customerController).build();
     }
 

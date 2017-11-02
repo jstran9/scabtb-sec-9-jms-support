@@ -1,5 +1,7 @@
 package guru.springframework.services.mapservices;
 
+import guru.springframework.commands.ProductForm;
+import guru.springframework.converters.ProductFormToProduct;
 import guru.springframework.domain.DomainObject;
 import guru.springframework.domain.Product;
 import guru.springframework.services.ProductService;
@@ -14,6 +16,12 @@ import java.util.List;
 @Service
 @Profile("map")
 public class ProductServiceImpl extends AbstractMapService implements ProductService {
+
+    private ProductFormToProduct productFormToProduct;
+
+    public ProductServiceImpl(ProductFormToProduct productFormToProduct) {
+        this.productFormToProduct = productFormToProduct;
+    }
 
     @Override
     public List<DomainObject> listAll() {
@@ -31,8 +39,13 @@ public class ProductServiceImpl extends AbstractMapService implements ProductSer
     }
 
     @Override
+    public Product saveOrUpdateProductForm(ProductForm productForm) {
+        return saveOrUpdate(productFormToProduct.convert(productForm));
+    }
+
+    @Override
     public void delete(Integer id) {
         super.delete(id);
     }
 
-   }
+}
