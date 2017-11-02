@@ -12,7 +12,6 @@ public class CustomerForm {
     private Integer customerId;
     private Integer customerVersion;
     @NotEmpty
-    @Min(value = 3)
     private String userName;
     private String passwordText;
     private String passwordTextConf;
