@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>guru.springframework</groupId>
-    <artifactId>commandObjectsAndSpringMVC</artifactId>
+    <artifactId>intro-to-spring-security</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>commandObjectsAndSpringMVC</name>
-    <description>Demo project for Spring Boot and Command Objects with Spring MVC</description>
+    <name>intro-to-spring-security</name>
+    <description>Demo project for Spring Boot And Spring Security</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
