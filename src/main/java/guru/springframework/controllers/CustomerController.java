@@ -10,8 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.naming.Binding;
+import javax.validation.Valid;
 
 /**
  * Created by jt on 11/15/15.
@@ -55,18 +59,23 @@ public class CustomerController {
         customerForm.setUserId(customer.getUser().getId());
         customerForm.setUserName(customer.getUser().getUsername());
         customerForm.setUserVersion(customer.getUser().getVersion());
-        model.addAttribute("customer", customerForm);
+        model.addAttribute("customerForm", customerForm);
         return "customer/customerform";
     }
 
     @RequestMapping("/new")
     public String newCustomer(Model model){
-        model.addAttribute("customer", new CustomerForm());
+        model.addAttribute("customerForm", new CustomerForm());
         return "customer/customerform";
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String saveOrUpdate(CustomerForm customerForm){
+    public String saveOrUpdate(@Valid CustomerForm customerForm, BindingResult bindingResult){
+
+        if(bindingResult.hasErrors()) {
+
+            return "customer/customerForm";
+        }
 
         Customer newCustomer = customerService.saveOrUpdateCustomerForm(customerForm);
         return "redirect:customer/show/" + newCustomer.getId();

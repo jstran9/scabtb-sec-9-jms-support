@@ -98,7 +98,7 @@ public class CustomerControllerTest {
         mockMvc.perform(get("/customer/edit/1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("customer/customerform"))
-                .andExpect(model().attribute("customer", instanceOf(CustomerForm.class)));
+                .andExpect(model().attribute("customerForm", instanceOf(CustomerForm.class)));
     }
 
     @Test
@@ -108,7 +108,7 @@ public class CustomerControllerTest {
         mockMvc.perform(get("/customer/new"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("customer/customerform"))
-                .andExpect(model().attribute("customer", instanceOf(CustomerForm.class)));
+                .andExpect(model().attribute("customerForm", instanceOf(CustomerForm.class)));
     }
 
     @Test

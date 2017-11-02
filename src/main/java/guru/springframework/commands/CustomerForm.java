@@ -1,5 +1,8 @@
 package guru.springframework.commands;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+
 /**
  * Created by jt on 12/22/15.
  */
@@ -8,6 +11,8 @@ public class CustomerForm {
     private Integer userVersion;
     private Integer customerId;
     private Integer customerVersion;
+    @NotEmpty
+    @Min(value = 3)
     private String userName;
     private String passwordText;
     private String passwordTextConf;
