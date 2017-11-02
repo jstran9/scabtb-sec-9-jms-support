@@ -1,5 +1,7 @@
 package guru.springframework.services.mapservices;
 
+import guru.springframework.commands.CustomerForm;
+import guru.springframework.converters.CustomerFormToCustomer;
 import guru.springframework.domain.Customer;
 import guru.springframework.domain.DomainObject;
 import guru.springframework.services.CustomerService;
@@ -14,6 +16,8 @@ import java.util.List;
 @Service
 @Profile("map")
 public class CustomerServiceImpl extends AbstractMapService implements CustomerService {
+
+    private CustomerFormToCustomer customerFormToCustomer;
 
     @Override
     public List<DomainObject> listAll() {
@@ -33,6 +37,19 @@ public class CustomerServiceImpl extends AbstractMapService implements CustomerS
     @Override
     public void delete(Integer id) {
         super.delete(id);
+    }
+
+    @Override
+    public Customer saveOrUpdateCustomerForm(CustomerForm customerForm) {
+        Customer newCustomer = customerFormToCustomer.convert(customerForm);
+
+        if(newCustomer.getUser().getId() != null){
+            Customer existingCustomer = getById(newCustomer.getId());
+
+            newCustomer.getUser().setEnabled(existingCustomer.getUser().getEnabled());
+        }
+
+        return saveOrUpdate(newCustomer);
     }
 
 }
