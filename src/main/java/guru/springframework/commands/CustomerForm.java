@@ -1,6 +1,7 @@
 package guru.springframework.commands;
 
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 import javax.validation.constraints.NotEmpty;
 
 /**
@@ -12,11 +13,15 @@ public class CustomerForm {
     private Integer customerId;
     private Integer customerVersion;
     @NotEmpty
+    @Size(min = 2)
     private String userName;
     private String passwordText;
     private String passwordTextConf;
     private String firstName;
     private String lastName;
+
+    @NotEmpty
+    @Email
     private String email;
     private String phoneNumber;
 
