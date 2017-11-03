@@ -43,12 +43,25 @@ public class SpringSecConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/").permitAll();
+        // for h2-console just disable csrf as it can cause unwanted effects.
+        // ** anything under the directory!
+        http.csrf().ignoringAntMatchers("/h2-console").disable()
+                .authorizeRequests().antMatchers("/**/favicon.ico") .permitAll()
+                .and().authorizeRequests().antMatchers("/product/**").permitAll()
+                .and().authorizeRequests().antMatchers("/webjars/**").permitAll()
+                .and().authorizeRequests().antMatchers("/static/css").permitAll()
+                .and().authorizeRequests().antMatchers("/js").permitAll()
+                .and().formLogin().loginPage("/login").permitAll()
+                .and().authorizeRequests().antMatchers("/customer/**").authenticated()
+                .and().authorizeRequests().antMatchers("/user/**").authenticated()
+                // spring security says if you're not authenticated then you get redirected to the login. (default behavior)
+                // spring security by default redirects you to an access denied page (role based security is one example)!
+                .and().exceptionHandling().accessDeniedPage("/access_denied");
     }
 
     @Autowired
     public void configureAuthManager(AuthenticationManagerBuilder authenticationManagerBuilder) {
-        // how spring security sets up the authentication providers.
+        // this is how spring security sets up the authentication providers.
         // spring context will inject in the provider and then the builder will
         // then use our authenticationProvider object. (IoC here since Spring is handling this for us).
         authenticationManagerBuilder.authenticationProvider(authenicationProvider);
