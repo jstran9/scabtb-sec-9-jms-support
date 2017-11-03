@@ -46,7 +46,8 @@ public class SpringSecConfig extends WebSecurityConfigurerAdapter {
         // for h2-console just disable csrf as it can cause unwanted effects.
         // ** anything under the directory!
         http.csrf().ignoringAntMatchers("/h2-console").disable()
-                .authorizeRequests().antMatchers("/**/favicon.ico") .permitAll()
+                .headers().frameOptions().disable()
+                .and().authorizeRequests().antMatchers("/**/favicon.ico") .permitAll()
                 .and().authorizeRequests().antMatchers("/product/**").permitAll()
                 .and().authorizeRequests().antMatchers("/webjars/**").permitAll()
                 .and().authorizeRequests().antMatchers("/static/css").permitAll()
