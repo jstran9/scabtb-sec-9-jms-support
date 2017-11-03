@@ -54,7 +54,10 @@ public class SpringSecConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests().antMatchers("/js").permitAll()
                 .and().formLogin().loginPage("/login").permitAll()
                 .and().authorizeRequests().antMatchers("/customer/**").authenticated()
-                .and().authorizeRequests().antMatchers("/user/**").authenticated()
+//                .and().authorizeRequests().antMatchers("/user/**").hasAuthority("ADMIN")
+                // as long as the account has admin they can view the pages at /user and under /user.
+                // using hasAuthority is technically more restrictive..
+                .and().authorizeRequests().antMatchers("/user/**").hasAnyAuthority("ADMIN")
                 // spring security says if you're not authenticated then you get redirected to the login. (default behavior)
                 // spring security by default redirects you to an access denied page (role based security is one example)!
                 .and().exceptionHandling().accessDeniedPage("/access_denied");
