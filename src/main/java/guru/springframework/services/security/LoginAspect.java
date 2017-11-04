@@ -5,18 +5,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-/**
- * Created by jt on 1/6/16.
- */
 @Aspect
 @Component // register this class as a spring component (a bean).
 public class LoginAspect {
 
-    private LoginFailureEventPublisher publisher;
+    private LoginFailureEventPublisher loginFailureEventPublisher;
+    private LoginSuccessEventPublisher successEventPublisher;
 
     @Autowired
     public void setPublisher(LoginFailureEventPublisher publisher) {
-        this.publisher = publisher;
+        this.loginFailureEventPublisher = publisher;
+    }
+
+    @Autowired
+    public void setSuccessEventPublisher(LoginSuccessEventPublisher successEventPublisher) {
+        this.successEventPublisher = successEventPublisher;
     }
 
     // take in any data type (via the wild card).
@@ -38,6 +41,7 @@ public class LoginAspect {
             returning = "authentication")
     public void logAfterAuthenticate( Authentication authentication){
         System.out.println("This is after the Authenticate Method authentication: " + authentication.isAuthenticated());
+        successEventPublisher.publishEvent(new LoginSuccessEvent(authentication));
     }
 
     @AfterThrowing("guru.springframework.services.security.LoginAspect.doAuthenticate() && args(authentication)")
@@ -48,6 +52,6 @@ public class LoginAspect {
 
         // after the authentication fails this logging will occur. (afterthrowing annotation).
         // remember this is decoupled as this uses spring's application event system to display this message.
-        publisher.publish(new LoginFailureEvent(authentication));
+        loginFailureEventPublisher.publish(new LoginFailureEvent(authentication));
     }
 }
