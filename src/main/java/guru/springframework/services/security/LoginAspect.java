@@ -1,6 +1,7 @@
 package guru.springframework.services.security;
 
 import org.aspectj.lang.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,13 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component // register this class as a spring component (a bean).
 public class LoginAspect {
+
+    private LoginFailureEventPublisher publisher;
+
+    @Autowired
+    public void setPublisher(LoginFailureEventPublisher publisher) {
+        this.publisher = publisher;
+    }
 
     // take in any data type (via the wild card).
     @Pointcut("execution(* org.springframework.security.authentication.AuthenticationProvider.authenticate(..))")
@@ -37,5 +45,9 @@ public class LoginAspect {
         String userDetails = (String) authentication.getPrincipal();
         // log the user name.
         System.out.println("Login failed for user: " + userDetails);
+
+        // after the authentication fails this logging will occur. (afterthrowing annotation).
+        // remember this is decoupled as this uses spring's application event system to display this message.
+        publisher.publish(new LoginFailureEvent(authentication));
     }
 }
