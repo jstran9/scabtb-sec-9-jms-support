@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>guru.springframework</groupId>
-    <artifactId>removing-spring-boot</artifactId>
+    <artifactId>jms-support</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>removing-spring-boot</name>
-    <description>Demo project for Spring without Spring Boot</description>
+    <name>jms-support</name>
+    <description>Demo project for Spring with JMS Support</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -83,6 +83,18 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+
+
+        <!-- JMS dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-broker</artifactId>
         </dependency>
 
         <dependency>
